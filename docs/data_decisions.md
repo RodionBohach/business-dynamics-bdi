@@ -185,3 +185,14 @@ Source: [ESA 2010, §3.124–3.125](https://eur-lex.europa.eu/eli/reg/2013/549/2
 The final X-panel has no missing values or duplicate keys.
 All eight derived variables remain candidates; model selection
 and diagnostics have not yet been completed.
+
+## X–Y merge
+
+X and Y were merged on `geo`, `nace_r2`, and `year` using
+an outer join with one-to-one validation.
+
+All 1,920 keys matched in both panels; no unmatched records
+were found. No observations were dropped.
+
+The exported analytical panel contains 1,920 rows and 24 columns.
+Its only missing values are the two quarantined survival rates.
