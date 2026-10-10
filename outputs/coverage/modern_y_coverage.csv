@@ -1,0 +1,5 @@
+year,expected_observations,complete_observations,completeness_pct
+2021,240,12,5.0
+2022,240,12,5.0
+2023,240,12,5.0
+2024,240,238,99.16666666666667

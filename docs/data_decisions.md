@@ -97,3 +97,22 @@ Outputs:
 - built a reusable parser for eight differently
 structured Eurostat exports and an auditable panel pipeline that
 preserves source information and checks expected results.
+
+## Modern Y coverage audit
+
+For the same 20 countries and 12 NACE sections, official rates
+provide complete four-component observations for:
+
+- 2021: 12/240 (5%);
+- 2022: 12/240 (5%);
+- 2023: 12/240 (5%);
+- 2024: 238/240 (99.17%).
+
+The main limitation is missing official Y3 survival rates
+in 2021–2023. Missing values are preserved without imputation.
+
+The main analytical sample remains 2013–2020.
+Year 2024 is a candidate for a separate modern snapshot,
+subject to methodological comparability checks.
+
+Coverage results are exported to `outputs/coverage/`.

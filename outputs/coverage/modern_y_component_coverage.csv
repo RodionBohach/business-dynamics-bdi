@@ -1,0 +1,17 @@
+year,component,available_observations,expected_observations,coverage_pct
+2021,birth_rate,238,240,99.16666666666667
+2021,death_rate,240,240,100.0
+2021,high_growth_share,226,240,94.16666666666667
+2021,survival_3y,12,240,5.0
+2022,birth_rate,240,240,100.0
+2022,death_rate,240,240,100.0
+2022,high_growth_share,240,240,100.0
+2022,survival_3y,12,240,5.0
+2023,birth_rate,240,240,100.0
+2023,death_rate,240,240,100.0
+2023,high_growth_share,240,240,100.0
+2023,survival_3y,12,240,5.0
+2024,birth_rate,240,240,100.0
+2024,death_rate,240,240,100.0
+2024,high_growth_share,240,240,100.0
+2024,survival_3y,238,240,99.16666666666667
