@@ -116,3 +116,31 @@ Year 2024 is a candidate for a separate modern snapshot,
 subject to methodological comparability checks.
 
 Coverage results are exported to `outputs/coverage/`.
+
+## Historical–modern comparability
+
+Eurostat indicates that data from 2021 are comparable with earlier
+years unless a break in series is reported. The EBS transition
+alone does not establish a break for every country.
+
+France explicitly reports that data from 2021 are generally not
+comparable with previous years. Sweden changed its statistical
+unit in 2022, while preserving legal units for selected survival
+cohorts.
+
+Therefore, historical and modern data are not automatically
+treated as one continuous panel. The main sample remains
+2013–2020; 2024 remains a candidate for a separate snapshot.
+
+Germany also reports a statistical-unit change in 2018 and a
+register-threshold change in 2019. These limitations within the
+historical sample will be considered in robustness analysis.
+
+The precise cause of missing official Y3 rates in 2021–2023
+has not been independently established.
+
+Sources:
+- [Eurostat general metadata](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_sims.htm)
+- [France](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_fr.htm)
+- [Sweden](https://ec.europa.eu/eurostat/cache/metadata/en/bd_simsbd21_se.htm)
+- [Germany](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_de.htm)
