@@ -144,3 +144,44 @@ Sources:
 - [France](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_fr.htm)
 - [Sweden](https://ec.europa.eu/eurostat/cache/metadata/en/bd_simsbd21_se.htm)
 - [Germany](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_de.htm)
+
+## Economic X-panel
+
+The main X-panel covers the same 20 countries and 12 NACE
+sections over 2013–2020: 1,920 unique observations.
+
+Source data for 2012 are retained to calculate employment growth
+for 2013. All seven source variables have complete numeric coverage
+in the selected 2012–2020 sample.
+
+Monetary variables use current prices in million EUR (`CP_MEUR`);
+employment and employees use thousand persons (`THS_PER`).
+
+Derived variables:
+
+| Variable | Formula | Unit |
+|---|---|---|
+| investment_intensity | GFCF / GVA × 100 | % |
+| labour_share | Compensation / GVA × 100 | %, unadjusted for self-employed labour |
+| average_compensation | Compensation / Employees × 1,000 | EUR per employee |
+| value_added_ratio | GVA / Output × 100 | % |
+| gfcf_per_employed | GFCF / Employment × 1,000 | EUR per employed person |
+| labour_productivity | GVA / Employment × 1,000 | Nominal EUR per employed person |
+| employment_growth | (Employment / previous-year Employment − 1) × 100 | % |
+| net_operating_surplus_mixed_income_margin | B2A3N / Output × 100 | % |
+
+Employment lags are calculated within country × NACE groups
+after sorting by year. The selected source panel has consecutive
+years, so the previous row corresponds to the previous year.
+
+Three negative GFCF observations were confirmed in the raw data:
+BG/J/2015, BG/E/2016, and LV/D/2017. They are retained and marked
+with `negative_gfcf`. Their specific causes have not been established.
+
+GFCF records acquisitions less disposals of fixed assets, so a
+negative value is not automatically a data error.
+Source: [ESA 2010, §3.124–3.125](https://eur-lex.europa.eu/eli/reg/2013/549/2024-09-01/eng).
+
+The final X-panel has no missing values or duplicate keys.
+All eight derived variables remain candidates; model selection
+and diagnostics have not yet been completed.
