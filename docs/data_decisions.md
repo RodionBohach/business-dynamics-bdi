@@ -196,3 +196,29 @@ were found. No observations were dropped.
 
 The exported analytical panel contains 1,920 rows and 24 columns.
 Its only missing values are the two quarantined survival rates.
+
+## Baseline BDI construction
+
+Four components receive equal weights of 0.25.
+Birth, survival, and high-growth have positive directions;
+death has a negative direction.
+
+Two normalization variants are calculated: z-score and min-max.
+Parameters are estimated across the pooled historical reference
+sample of 1,918 complete observations from 2013–2020.
+Z-score uses population standard deviation (`ddof=0`).
+
+Death is reversed by multiplying its z-score by -1 and using
+1 minus its min-max score.
+
+Aggregation requires all four components (`skipna=False`).
+All 1,920 rows are retained; the two quarantined survival
+observations have missing BDI values.
+
+Pooled Spearman correlation between the two BDI variants is
+approximately 0.948. This is an initial ranking comparison,
+not a complete robustness assessment.
+
+Normalization parameters are exported for reproducibility.
+These pooled parameters are intended for historical analysis;
+predictive validation would require training-only estimation.
