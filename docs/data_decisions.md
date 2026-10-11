@@ -222,3 +222,15 @@ not a complete robustness assessment.
 Normalization parameters are exported for reproducibility.
 These pooled parameters are intended for historical analysis;
 predictive validation would require training-only estimation.
+
+### Sensitivity of the z-score BDI to selected extreme observations
+
+NO/D/2020, PT/D/2016, and RO/M/2013 were excluded from the reference sample used to estimate normalization parameters. Across the remaining 1,915 complete observations, the Spearman correlation between the baseline and sensitivity indices was 0.999299. The median absolute rank shift was 11 positions, the 95th percentile was 44, and the maximum was 89.
+
+The baseline index remains unchanged. This check assesses sensitivity to the selected observations; it does not establish that their source values are erroneous.
+
+### Sensitivity of the min–max BDI
+
+Using the same reference-sample exclusions, the Spearman correlation between the baseline and sensitivity min–max indices was 0.916144 across 1,915 complete observations. The median absolute rank shift was 132 positions, the 95th percentile was 474.9, and the maximum was 873.
+
+Compared with the z-score results, min–max rankings were more sensitive to the selected extreme observations. This supports retaining z-score normalization for the main BDI and using min–max as an alternative specification.
