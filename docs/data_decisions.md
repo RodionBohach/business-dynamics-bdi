@@ -254,3 +254,13 @@ The complete-case sample contains 1,918 observations for 2013–2020. Country, N
 VIF values for the four predictors range from 1.009 to 1.967, indicating no substantial multicollinearity in the pooled predictor matrix. This check does not assess collinearity after introducing fixed effects.
 
 The specification is preliminary and intended to assess associations, not causal effects.
+
+### Initial pooled OLS model
+
+A pooled OLS model was estimated on 1,918 complete observations, with z-score BDI as the dependent variable. Predictors were investment intensity, labour share, log labour productivity, and employment growth.
+
+Standard errors were clustered by country × NACE section (240 clusters), allowing for heteroskedasticity and within-cluster error dependence.
+
+R-squared was 0.165. Labour share, log labour productivity, and employment growth had positive coefficients with p-values below 0.05. Investment intensity had a positive coefficient, but its clustered p-value was 0.090.
+
+This model provides a preliminary association benchmark. It does not include fixed effects and does not identify causal relationships. Clustering by country × NACE does not account for dependence across different clusters.

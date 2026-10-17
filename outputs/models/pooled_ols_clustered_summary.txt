@@ -1,0 +1,28 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:             bdi_zscore   R-squared:                       0.165
+Model:                            OLS   Adj. R-squared:                  0.163
+Method:                 Least Squares   F-statistic:                     28.74
+Date:                Sun, 18 Oct 2026   Prob (F-statistic):           1.66e-19
+Time:                        01:24:40   Log-Likelihood:                -1021.6
+No. Observations:                1918   AIC:                             2053.
+Df Residuals:                    1913   BIC:                             2081.
+Df Model:                           4                                         
+Covariance Type:              cluster                                         
+===========================================================================================
+                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------
+const                      -2.5375      0.339     -7.479      0.000      -3.203      -1.873
+investment_intensity        0.0020      0.001      1.693      0.090      -0.000       0.004
+labour_share                0.0074      0.002      4.355      0.000       0.004       0.011
+log_labour_productivity     0.1903      0.026      7.268      0.000       0.139       0.242
+employment_growth           0.0235      0.003      7.186      0.000       0.017       0.030
+==============================================================================
+Omnibus:                      171.046   Durbin-Watson:                   0.754
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             1101.395
+Skew:                           0.044   Prob(JB):                    6.84e-240
+Kurtosis:                       6.711   Cond. No.                         988.
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (CRV1)
