@@ -234,3 +234,11 @@ The baseline index remains unchanged. This check assesses sensitivity to the sel
 Using the same reference-sample exclusions, the Spearman correlation between the baseline and sensitivity min–max indices was 0.916144 across 1,915 complete observations. The median absolute rank shift was 132 positions, the 95th percentile was 474.9, and the maximum was 873.
 
 Compared with the z-score results, min–max rankings were more sensitive to the selected extreme observations. This supports retaining z-score normalization for the main BDI and using min–max as an alternative specification.
+
+### Initial descriptive analysis
+
+Descriptive summaries and figures were produced for the main sample, covering 1,918 complete BDI observations in 2013–2020.
+
+Mean BDI increased between 2013 and 2018, then declined in 2019–2020. The Netherlands had the highest country mean, while NACE section J had the highest sector mean. These are equally weighted summaries across the selected country–industry–year observations.
+
+The pooled Spearman correlation between birth and death rates was 0.632, while the correlation between death and three-year survival rates was −0.585. These associations do not establish causality.
