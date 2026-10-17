@@ -1,3 +1,4 @@
 pandas==3.0.6
 ipykernel==7.4.0
 matplotlib==3.11.2
+statsmodels==0.15.0

@@ -242,3 +242,15 @@ Descriptive summaries and figures were produced for the main sample, covering 1,
 Mean BDI increased between 2013 and 2018, then declined in 2019–2020. The Netherlands had the highest country mean, while NACE section J had the highest sector mean. These are equally weighted summaries across the selected country–industry–year observations.
 
 The pooled Spearman correlation between birth and death rates was 0.632, while the correlation between death and three-year survival rates was −0.585. These associations do not establish causality.
+
+### Preparation of the baseline model sample
+
+The baseline specification uses investment intensity, labour share, log labour productivity, and employment growth to examine associations with the z-score BDI.
+
+Labour productivity is measured as nominal gross value added per employed person in current EUR. Its natural logarithm is used to reduce right skewness; this does not adjust for inflation or cross-country price differences.
+
+The complete-case sample contains 1,918 observations for 2013–2020. Country, NACE section, and year identifiers are retained. No additional observations were excluded.
+
+VIF values for the four predictors range from 1.009 to 1.967, indicating no substantial multicollinearity in the pooled predictor matrix. This check does not assess collinearity after introducing fixed effects.
+
+The specification is preliminary and intended to assess associations, not causal effects.
