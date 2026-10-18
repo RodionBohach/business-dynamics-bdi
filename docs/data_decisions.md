@@ -296,3 +296,9 @@ The same fixed-effects specification was estimated with standard errors clustere
 Coefficients were unchanged, but country-clustered standard errors were larger. Country-clustered p-values were 0.0695 for investment intensity, 0.0613 for labour share, 0.2409 for log labour productivity, and 0.0497 for employment growth.
 
 Statistical significance is therefore sensitive to the clustering level. Country clustering allows error dependence across industries within a country, but inference with only 20 clusters remains approximate. These results warrant cautious interpretation rather than firm claims based on a 5% threshold.
+
+### Sensitivity to BDI normalization in the fixed-effects model
+
+The fixed-effects specification was re-estimated using min–max BDI on the same 1,918 observations, with the same four predictors, country × NACE and year fixed effects, and country-clustered standard errors with t-based inference.
+
+All four coefficient signs matched the z-score specification. However, all 95% confidence intervals included zero. The results support sign consistency across these two normalizations, but not robust statistical significance. Coefficient magnitudes are not directly comparable because the dependent variables have different scales.

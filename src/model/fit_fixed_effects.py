@@ -157,3 +157,30 @@ fe_clustering_comparison = pd.DataFrame({
 # %%
 fe_clustering_comparison.to_csv(fit_dir / 'fixed_effects_clustering_comparison.csv', index=True)
 # %%
+bdi_source = pd.read_csv(project_root / "data/final/BDI_panel.csv")
+# %%
+bdi_alternative_columns = bdi_source[['geo', 'nace_r2', 'year', 'bdi_minmax']]
+# %%
+fe_alternative_sample = fit_model.merge(bdi_alternative_columns, on=['geo', 'nace_r2', 'year'], how='left', validate="one_to_one")
+# %%
+fe_minmax_formula = (
+    "bdi_minmax ~ investment_intensity + labour_share "
+    "+ log_labour_productivity + employment_growth "
+    "+ C(panel_id) + C(year)"
+)
+# %%
+fe_minmax_model = smf.ols(fe_minmax_formula, data=fe_alternative_sample)
+fe_minmax_results = fe_minmax_model.fit(cov_type="cluster", cov_kwds = {'groups': fe_alternative_sample["geo"]}, use_t=True)
+# %%
+fe_minmax_intervals = fe_minmax_results.conf_int()
+
+fe_minmax_coefficients = pd.DataFrame({
+    "coefficient": fe_minmax_results.params.loc[fit_effects],
+    "std_error": fe_minmax_results.bse.loc[fit_effects],
+    "p_value": fe_minmax_results.pvalues.loc[fit_effects],
+    "ci_lower": fe_minmax_intervals.loc[fit_effects, 0],
+    "ci_upper": fe_minmax_intervals.loc[fit_effects, 1],
+})
+# %%
+fe_minmax_coefficients.to_csv(fit_dir / 'fixed_effects_minmax_country_clustered_coefficients.csv', index=True)
+# %%
