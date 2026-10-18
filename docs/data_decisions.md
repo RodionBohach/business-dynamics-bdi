@@ -302,3 +302,9 @@ Statistical significance is therefore sensitive to the clustering level. Country
 The fixed-effects specification was re-estimated using min–max BDI on the same 1,918 observations, with the same four predictors, country × NACE and year fixed effects, and country-clustered standard errors with t-based inference.
 
 All four coefficient signs matched the z-score specification. However, all 95% confidence intervals included zero. The results support sign consistency across these two normalizations, but not robust statistical significance. Coefficient magnitudes are not directly comparable because the dependent variables have different scales.
+
+### Presentation of fixed-effects results
+
+Z-score and min–max coefficient estimates were combined in a comparison table. Their raw magnitudes are not directly comparable because the dependent variables have different scales.
+
+For the z-score model, coefficients and country-clustered 95% confidence intervals were multiplied by each predictor’s standard deviation after removing country × NACE and year effects. The resulting figure reports associations per one within-standard-deviation increase in each predictor, in BDI units. This rescaling does not change the fitted model or statistical significance.

@@ -184,3 +184,7 @@ fe_minmax_coefficients = pd.DataFrame({
 # %%
 fe_minmax_coefficients.to_csv(fit_dir / 'fixed_effects_minmax_country_clustered_coefficients.csv', index=True)
 # %%
+within_predictor_stds = within_predictors.std(ddof=0)
+within_predictor_stds.to_csv(diagnostics_dir / 'fe_within_predictor_stds.csv', index=True, header=["within_std"])
+
+# %%
