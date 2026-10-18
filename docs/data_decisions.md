@@ -288,3 +288,11 @@ Residual-versus-fitted plots and observation-level residuals, leverage, and Cook
 The fixed-effects model was re-estimated after excluding PT/D/2016, NO/D/2020, and RO/M/2013. The sensitivity sample contained 1,915 observations and retained all 240 country × NACE pairs. BDI values and normalization parameters were unchanged.
 
 All four predictor coefficients retained their signs and remained close to the baseline estimates. Investment intensity remained borderline at the 5% level (p = 0.0477). This supports coefficient stability under this specific exclusion scenario; it does not establish robustness to other specifications or clustering choices.
+
+### Sensitivity to the clustering level
+
+The same fixed-effects specification was estimated with standard errors clustered by country × NACE (240 clusters) and by country (20 clusters). Both estimates used t-based inference.
+
+Coefficients were unchanged, but country-clustered standard errors were larger. Country-clustered p-values were 0.0695 for investment intensity, 0.0613 for labour share, 0.2409 for log labour productivity, and 0.0497 for employment growth.
+
+Statistical significance is therefore sensitive to the clustering level. Country clustering allows error dependence across industries within a country, but inference with only 20 clusters remains approximate. These results warrant cautious interpretation rather than firm claims based on a 5% threshold.

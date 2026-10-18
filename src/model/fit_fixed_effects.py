@@ -133,3 +133,27 @@ fe_sensitivity_comparison = pd.DataFrame({
 # %%
 fe_sensitivity_comparison.to_csv(fit_dir / 'fixed_effects_sensitivity_comparison.csv', index=True)
 # %%
+fe_country_clustered_results = fe_model.fit(cov_type="cluster", cov_kwds={'groups': fit_model['geo']}, use_t=True)
+country_confidence_intervals = fe_country_clustered_results.conf_int()
+
+fe_country_clustered_coefficients = pd.DataFrame({
+    "coefficient": fe_country_clustered_results.params.loc[fit_effects],
+    "std_error": fe_country_clustered_results.bse.loc[fit_effects],
+    "p_value": fe_country_clustered_results.pvalues.loc[fit_effects],
+    "ci_lower": country_confidence_intervals.loc[fit_effects, 0],
+    "ci_upper": country_confidence_intervals.loc[fit_effects, 1],
+})
+# %%
+fe_country_clustered_coefficients.to_csv(fit_dir / 'fixed_effects_country_clustered_coefficients.csv', index=True)
+fe_pair_clustered_t_results = fe_model.fit(cov_type="cluster", cov_kwds={'groups': fit_model['panel_id']}, use_t=True)
+# %%
+fe_clustering_comparison = pd.DataFrame({
+    'coefficient' : fe_pair_clustered_t_results.params.loc[fit_effects],
+    'pair_std_error' : fe_pair_clustered_t_results.bse.loc[fit_effects],
+    'country_std_error': fe_country_clustered_results.bse.loc[fit_effects],
+    'pair_p_value' : fe_pair_clustered_t_results.pvalues.loc[fit_effects],
+    'country_p_value' :fe_country_clustered_results.pvalues.loc[fit_effects]
+})
+# %%
+fe_clustering_comparison.to_csv(fit_dir / 'fixed_effects_clustering_comparison.csv', index=True)
+# %%
