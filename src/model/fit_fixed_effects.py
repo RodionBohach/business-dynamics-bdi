@@ -4,6 +4,8 @@ from pathlib import Path
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 import statsmodels.formula.api as smf
+import matplotlib.pyplot as plt
+
 project_root = Path(__file__).resolve().parents[2]
 fit_model = pd.read_csv(project_root / 'data/final/baseline_model_sample.csv')
 fit_effects = ['investment_intensity', 'labour_share', 'log_labour_productivity', 'employment_growth']
@@ -76,4 +78,58 @@ fe_coefficients.to_csv(fit_dir / 'fixed_effects_clustered_coefficients.csv', ind
     fe_results.summary().as_text(),
     encoding="utf-8",
 )
+# %%
+fe_observation_diagnostics = fit_model[['geo', 'nace_r2', 'year', 'bdi_zscore']].copy()
+fe_observation_diagnostics['fitted'] = fe_results.fittedvalues
+fe_observation_diagnostics['residual'] = fe_results.resid
+fe_observation_diagnostics['abs_residual'] = fe_observation_diagnostics["residual"].abs()
+
+# %%
+figures_dir = project_root / "outputs/figures"
+figures_dir.mkdir(parents=True, exist_ok=True)
+plt.figure(figsize=(8, 5))
+plt.scatter(
+    fe_observation_diagnostics["fitted"],
+    fe_observation_diagnostics["residual"],
+    alpha=0.5,
+    s=15,
+)
+plt.axhline(y=0, color="gray", linestyle="--")
+plt.xlabel("Fitted BDI")
+plt.ylabel("Residual")
+plt.title("FE model: residuals versus fitted values")
+plt.tight_layout()
+plt.savefig(figures_dir/ "fe_residuals_vs_fitted.png", dpi=300, bbox_inches="tight")
+plt.show()
+# %%
+
+fe_observation_diagnostics.to_csv(diagnostics_dir / 'fe_observation_diagnostics.csv', index=False)
+# %%
+fe_influence = fe_results.get_influence()
+# %%
+fe_observation_diagnostics['leverage'] = fe_influence.hat_matrix_diag
+fe_observation_diagnostics['cooks_distance'] = fe_influence.cooks_distance[0]
+# %%
+fe_observation_diagnostics.to_csv(diagnostics_dir / 'fe_observation_diagnostics.csv')
+fe_sensitivity_exclusion_mask = (((fit_model['geo'] == 'PT') & (fit_model['nace_r2'] == 'D') & (fit_model['year'] == 2016))
+|
+((fit_model['geo'] == 'NO') & (fit_model['nace_r2'] == 'D') & (fit_model['year'] == 2020))
+|
+((fit_model['geo'] == 'RO') & (fit_model['nace_r2'] == 'M') & (fit_model['year'] == 2013)))
+
+
+
+# %%
+fe_sensitivity_sample = fit_model[~fe_sensitivity_exclusion_mask].copy()
+# %%
+fe_sensitivity_results = smf.ols(fe_formula, data=fe_sensitivity_sample,).fit(cov_type="cluster",cov_kwds={"groups": fe_sensitivity_sample["panel_id"]},)
+# %%
+fe_sensitivity_comparison = pd.DataFrame({
+    "baseline_coefficient": fe_results.params.loc[fit_effects],
+    "sensitivity_coefficient": fe_sensitivity_results.params.loc[fit_effects],
+    "baseline_p_value": fe_results.pvalues.loc[fit_effects],
+    "sensitivity_p_value": fe_sensitivity_results.pvalues.loc[fit_effects],
+})
+# %%
+fe_sensitivity_comparison.to_csv(fit_dir / 'fixed_effects_sensitivity_comparison.csv', index=True)
 # %%

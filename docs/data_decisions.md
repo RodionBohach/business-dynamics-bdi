@@ -280,3 +280,11 @@ Labour share and log labour productivity changed sign relative to pooled OLS. Th
 Within-transformed predictor VIFs ranged from 1.032 to 1.615, providing no indication of substantial multicollinearity among the four predictors.
 
 The reported R-squared of 0.674 includes the fixed effects. The omnibus robust F-test was not interpreted because its constraint covariance matrix was rank deficient. Country × NACE clustering does not allow for error dependence across different pairs.
+
+### Fixed-effects diagnostics and sensitivity analysis
+
+Residual-versus-fitted plots and observation-level residuals, leverage, and Cook’s distances were examined. Cook’s distance is a conventional OLS diagnostic for the full dummy-variable model, not a cluster-adjusted influence measure or an automatic exclusion rule.
+
+The fixed-effects model was re-estimated after excluding PT/D/2016, NO/D/2020, and RO/M/2013. The sensitivity sample contained 1,915 observations and retained all 240 country × NACE pairs. BDI values and normalization parameters were unchanged.
+
+All four predictor coefficients retained their signs and remained close to the baseline estimates. Investment intensity remained borderline at the 5% level (p = 0.0477). This supports coefficient stability under this specific exclusion scenario; it does not establish robustness to other specifications or clustering choices.
