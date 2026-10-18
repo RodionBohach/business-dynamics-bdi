@@ -264,3 +264,19 @@ Standard errors were clustered by country × NACE section (240 clusters), allowi
 R-squared was 0.165. Labour share, log labour productivity, and employment growth had positive coefficients with p-values below 0.05. Investment intensity had a positive coefficient, but its clustered p-value was 0.090.
 
 This model provides a preliminary association benchmark. It does not include fixed effects and does not identify causal relationships. Clustering by country × NACE does not account for dependence across different clusters.
+
+### Two-way fixed-effects model
+
+The model includes country × NACE fixed effects and year fixed effects, with standard errors clustered by country × NACE (240 clusters). It uses the same 1,918 observations as pooled OLS.
+
+Estimated coefficients were:
+- Investment intensity: 0.00257 (p = 0.039).
+- Labour share: −0.01256 (p < 0.001).
+- Log labour productivity: −0.30664 (p = 0.045).
+- Employment growth: 0.00783 (p < 0.001).
+
+Labour share and log labour productivity changed sign relative to pooled OLS. The fixed-effects estimates describe within-pair associations after controlling for common year effects; they do not establish causality.
+
+Within-transformed predictor VIFs ranged from 1.032 to 1.615, providing no indication of substantial multicollinearity among the four predictors.
+
+The reported R-squared of 0.674 includes the fixed effects. The omnibus robust F-test was not interpreted because its constraint covariance matrix was rank deficient. Country × NACE clustering does not allow for error dependence across different pairs.
