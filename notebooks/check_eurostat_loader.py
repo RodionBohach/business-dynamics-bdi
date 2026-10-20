@@ -2,7 +2,7 @@
 from pathlib import Path
 import sys
 
-project_root = Path.cwd().parent
+project_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_root / "src"))
 
 from data.load_eurostat import load_eurostat_data

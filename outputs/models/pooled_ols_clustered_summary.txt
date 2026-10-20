@@ -3,8 +3,8 @@
 Dep. Variable:             bdi_zscore   R-squared:                       0.165
 Model:                            OLS   Adj. R-squared:                  0.163
 Method:                 Least Squares   F-statistic:                     28.74
-Date:                Sun, 18 Oct 2026   Prob (F-statistic):           1.66e-19
-Time:                        01:24:40   Log-Likelihood:                -1021.6
+Date:                Mon, 19 Oct 2026   Prob (F-statistic):           1.66e-19
+Time:                        00:20:40   Log-Likelihood:                -1021.6
 No. Observations:                1918   AIC:                             2053.
 Df Residuals:                    1913   BIC:                             2081.
 Df Model:                           4                                         

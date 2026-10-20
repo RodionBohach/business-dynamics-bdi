@@ -308,3 +308,34 @@ All four coefficient signs matched the z-score specification. However, all 95% c
 Z-score and min–max coefficient estimates were combined in a comparison table. Their raw magnitudes are not directly comparable because the dependent variables have different scales.
 
 For the z-score model, coefficients and country-clustered 95% confidence intervals were multiplied by each predictor’s standard deviation after removing country × NACE and year effects. The resulting figure reports associations per one within-standard-deviation increase in each predictor, in BDI units. This rescaling does not change the fitted model or statistical significance.
+
+## Reproducing the analysis
+
+Run the following commands from the repository root with the project virtual environment activated.
+
+### Build the analytical data and BDI
+
+python src/data/build_y_panel.py
+python src/data/build_x_panel.py
+python src/data/merge_panels.py
+python src/index/build_bdi.py
+
+### Run data audits and descriptive analysis
+
+python notebooks/check_eurostat_loader.py
+python notebooks/audit_modern_y.py
+python notebooks/diagnose_bdi.py
+python notebooks/describe_bdi.py
+
+### Prepare and estimate models
+
+python notebooks/prepare_models.py
+python src/model/fit_baseline.py
+python src/model/fit_fixed_effects.py
+python notebooks/compare_models.py
+
+Plot windows may need to be closed for scripts to continue.
+
+The fixed-effects summary may emit a warning about a rank-deficient covariance matrix of constraints. The omnibus robust F-test is not interpreted; individual coefficient estimates and uncertainty are reported separately.
+
+Raw Eurostat files must be present in data/raw. They are not included in the repository.
