@@ -68,3 +68,28 @@ plt.title("Distribution of BDI, 2013–2020")
 plt.savefig(figures_dir/ "bdi_distribution.png", dpi=300, bbox_inches="tight")
 plt.show()
 # %%
+survival_country_year_summary = bdi_panel.groupby(['geo', 'year'])['survival_3y'].agg(mean = 'mean', count = 'count').reset_index()
+# %%
+survival_country_year_pivot = survival_country_year_summary.pivot(index='geo', columns='year', values='mean')
+# %%
+survival_country_year_table = survival_country_year_pivot.copy()
+survival_country_year_table["period_mean"] = (
+    survival_country_year_table.mean(axis=1)
+)
+
+survival_country_year_table = survival_country_year_table.sort_values(
+    by="period_mean",
+    ascending=False,
+)
+
+survival_country_year_table.to_csv(
+    descriptive_dir / "survival_country_year_table.csv",
+    index=True,
+)
+print(survival_country_year_table.round(2))
+# %%
+survival_country_year_summary.to_csv(
+    descriptive_dir / "survival_country_year_summary.csv",
+    index=False,
+)
+# %%
