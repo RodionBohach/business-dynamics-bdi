@@ -114,3 +114,21 @@ Z-score BDI rankings were more stable than min–max rankings under the examined
 Fixed-effects estimates consistently associated investment intensity and employment growth positively with BDI, and labour share and log labour productivity negatively, across the examined exclusion and normalization specifications. However, statistical significance was sensitive to the clustering level and BDI normalization. The findings therefore provide exploratory evidence of associations rather than firm evidence of causal effects.
 
 The main contribution is a transparent framework for measuring and exploring entrepreneurial dynamics. The resulting index and visualizations should be interpreted alongside component values, data-quality information, and the stated methodological limitations.
+
+## Attempted reconstruction of missing three-year survival rates
+
+Three-year survival rates were reconstructed as the number of enterprises born in year t−3 and surviving to year t, divided by enterprise births in t−3, multiplied by 100.
+
+For 2024, reconstruction using modern-data survivor counts and 2021 birth counts matched the published rates across 492 comparable observations. The maximum absolute difference was 0.005 percentage points, consistent with rounding.
+
+For 2021–2023, modern survivor counts were combined with historical birth counts for 2018–2020. This produced 23 values above 100%. Comparisons with available published rates also showed substantial discrepancies:
+
+| Country | Comparable observations | Mean absolute difference (percentage points) | Maximum absolute difference (percentage points) |
+|---|---:|---:|---:|
+| Finland | 45 | 10.087 | 83.788 |
+| Iceland | 36 | 2.873 | 21.430 |
+| Türkiye | 45 | 2.262 | 13.568 |
+
+These findings show that the available historical birth counts and modern survivor counts cannot be assumed to form compatible cohort denominators and numerators. The precise source of the discrepancies was not established.
+
+The reconstructed 2021–2023 rates were not incorporated into BDI. The main analytical period remains 2013–2020. This result concerns the available extracts and does not establish that reconstruction would be impossible using revised, compatible source data.
