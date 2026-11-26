@@ -390,3 +390,17 @@ A separate cohort analysis aligned Y1, Y2, and Y3 for birth cohorts 2012–2017,
 
 These checks do not select an optimal horizon. Each variant describes a different survival horizon, while the high-growth component retains its three-year definition.
 
+### Comparison of growth components
+
+High-growth share was compared with cumulative employment growth among surviving enterprises over one-, two-, and three-year horizons.
+
+Six BDI variants were calculated on the same 1,855 complete observations from 2013–2020. Within each horizon pair, birth rate, reversed death rate, survival rate, and component weights were identical; only the growth component changed. Z-score parameters were estimated on this common sample.
+
+Spearman correlations between paired BDI variants were 0.7922, 0.8081, and 0.7489 for horizons 1–3. Correlations between high-growth share and survivor employment growth alone were substantially lower: 0.1136, 0.1551, and 0.1878.
+
+Median absolute rank shifts were 194, 199, and 218 positions out of 1,855. The two growth measures therefore cannot be treated as interchangeable proxies.
+
+High-growth share measures the prevalence of enterprises meeting a growth threshold. Survivor employment growth measures employment expansion within surviving birth cohorts and excludes employment losses in enterprises that did not survive. Neither comparison establishes which measure is preferable independently of the intended index concept.
+
+The original BDI remains unchanged. Survivor employment growth is retained as an alternative measure for further interpretation, rather than adopted solely to match the survival horizon.
+
