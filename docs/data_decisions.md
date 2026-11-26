@@ -363,3 +363,16 @@ The expected count is 240 for each horizon and year. In-range values carrying br
 Survivor employment growth measures cumulative employment change among surviving enterprises relative to employment in those same enterprises at birth. No values at or below −100% were found. Large positive values were retained for further examination.
 
 This audit does not establish historical–modern comparability or approve a revised BDI specification. The original BDI remains unchanged.
+
+### Sensitivity to excluding the death-rate component
+
+The original four-component BDI was compared with an alternative excluding death rate. The comparison retained the same 1,918 observations and the original z-score parameters for the remaining components. Their weights changed from 0.25 to 1/3.
+
+The Spearman rank correlation was 0.8302. The median absolute rank shift was 162.5 positions, the 95th percentile was 651, and the maximum was 1,876.
+
+All eight PT/N observations appeared among the ten largest rank shifts. Their profiles combined high birth and death rates, low three-year survival, and relatively high high-growth shares. Excluding death rate substantially improved their ranks.
+
+The original specification is retained provisionally because low enterprise mortality is an explicit part of its intended interpretation, alongside enterprise creation, cohort survival, and growth. The comparison demonstrates the consequences of that choice; it does not establish that either specification is objectively superior.
+
+Death rate and churn are also reported separately. Churn is calculated as birth rate plus death rate and describes turnover rather than necessarily beneficial economic renewal. No component is removed selectively for individual countries or years.
+
