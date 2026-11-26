@@ -339,3 +339,27 @@ Plot windows may need to be closed for scripts to continue.
 The fixed-effects summary may emit a warning about a rank-deficient covariance matrix of constraints. The omnibus robust F-test is not interpreted; individual coefficient estimates and uncertainty are reported separately.
 
 Raw Eurostat files must be present in data/raw. They are not included in the repository.
+
+
+### Audit of survival horizons and survivor employment growth
+
+Additional Eurostat extracts downloaded on 24 November 2026 contain survival rates and survivor employment growth for one-, two-, and three-year horizons.
+
+Within the selected 20 countries and 12 NACE sections, historical survival rates had complete numeric coverage for 2009–2020. However, 92 values were outside 0–100%. Four occurred in 2013–2020: two Romanian Y3 observations in 2013 and two Hungarian Y1 observations in 2020.
+
+Two modern survival rates exceeded 100%, both for Norway, section D: Y2 in 2023 and Y3 in 2024. Original values and flags were preserved; only `value_analytical` was set to missing for out-of-range survival rates.
+
+After this check, modern survival coverage was:
+
+| Year | Y1 | Y2 | Y3 |
+|---|---:|---:|---:|
+| 2021 | 12 | 12 | 12 |
+| 2022 | 238 | 12 | 12 |
+| 2023 | 240 | 237 | 12 |
+| 2024 | 240 | 240 | 237 |
+
+The expected count is 240 for each horizon and year. In-range values carrying break flags remain available and require separate comparability assessment.
+
+Survivor employment growth measures cumulative employment change among surviving enterprises relative to employment in those same enterprises at birth. No values at or below −100% were found. Large positive values were retained for further examination.
+
+This audit does not establish historical–modern comparability or approve a revised BDI specification. The original BDI remains unchanged.

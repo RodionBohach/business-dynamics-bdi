@@ -36,3 +36,16 @@ python notebooks/document_raw_sources.py
 Dimension values describe the contents of the saved extracts.
 They do not imply that every possible combination has an observation
 or a non-missing value.
+
+
+## Additional extracts downloaded on 24 November 2026
+
+| Local filename | Dataset | Selected indicators |
+|---|---|---|
+| `bd_9bd_sz_cl_r2_survival_employment_growth_Y1_Y2_Y3.tsv.gz` | `bd_9bd_sz_cl_r2` | V97041–V97043; V97141–V97143 |
+| `bd_size_survival_employment_growth_Y1_Y2_Y3.tsv.gz` | `bd_size` | ENT_SRVLR_BRTH_PC; GRW_EMP_SRVL_PC; ages Y1, Y2, Y3 |
+
+Both extracts select total enterprise size and the 12 NACE sections used in the main analysis. Country coverage is filtered to the main sample during processing. The historical extract covers 2009–2020; the modern extract covers 2021–2024.
+
+These extracts support an audit of alternative survival and growth horizons. They do not replace the original source files or establish comparability between historical and modern series.
+
