@@ -376,3 +376,17 @@ The original specification is retained provisionally because low enterprise mort
 
 Death rate and churn are also reported separately. Churn is calculated as birth rate plus death rate and describes turnover rather than necessarily beneficial economic renewal. No component is removed selectively for individual countries or years.
 
+### Comparison of survival horizons
+
+Three four-component BDI variants were compared, replacing only the survival horizon with one-, two-, or three-year survival. Birth rate, reversed death rate, and the original high-growth share were unchanged.
+
+The comparison used 1,916 observations with valid values for all required components. Z-score parameters were estimated on this common sample, with separate parameters for each survival horizon. The original BDI was not overwritten. The new and original Y3 extracts matched in both values and missingness.
+
+Spearman correlations between BDI variants ranged from 0.9023 to 0.9376. Correlations between survival rates alone ranged from 0.6920 to 0.8128. Shared BDI components therefore reduced the apparent differences between survival horizons.
+
+Relative to the Y3 variant, median absolute rank shifts were 109.5 positions for Y1 and 67 for Y2. The choice of survival horizon affects rankings and cannot be justified by high index correlations alone.
+
+A separate cohort analysis aligned Y1, Y2, and Y3 for birth cohorts 2012–2017, producing 1,440 complete trajectories. One trajectory, AT/E/2012, increased from 78.77% at Y1 to 82.19% at Y2. Source values were confirmed and carried no flags; the cause was not established. The trajectory was retained and marked rather than corrected.
+
+These checks do not select an optimal horizon. Each variant describes a different survival horizon, while the high-growth component retains its three-year definition.
+
