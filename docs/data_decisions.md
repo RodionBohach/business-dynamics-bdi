@@ -404,3 +404,31 @@ High-growth share measures the prevalence of enterprises meeting a growth thresh
 
 The original BDI remains unchanged. Survivor employment growth is retained as an alternative measure for further interpretation, rather than adopted solely to match the survival horizon.
 
+## Separate modern BDI snapshot: 2024
+
+The 2024 snapshot is analysed separately from the historical
+2013–2020 BDI because comparability across the data transition
+has not been established.
+
+Three versions retain birth rate, negatively directed death rate
+and high-growth enterprise share, while using one-, two- or
+three-year survival respectively. The high-growth component retains
+its three-year growth window in all versions.
+
+All versions use the same 237 country–industry observations.
+Normalization parameters are calculated on this common 2024 sample.
+The resulting index values are not directly comparable with the
+historical BDI.
+
+Hungary's sections B and E lack three-year survival values.
+Norway's section D is excluded because its reported three-year
+survival rate of 462.25% was quarantined during the audit.
+
+Spearman correlations between versions range from 0.893 to 0.940.
+Median absolute rank shifts relative to the three-year survival
+version are 14 places for S1 and 9 places for S2.
+
+Country summaries are unweighted averages across available industries.
+Norway covers 11 industries and Hungary 10; all other countries
+cover 12. These summaries are not official national aggregate rates.
+

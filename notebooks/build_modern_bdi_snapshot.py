@@ -1,0 +1,287 @@
+# %%
+from pathlib import Path
+import sys
+
+import pandas as pd
+
+project_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(project_root / "src"))
+
+from data.load_eurostat import load_eurostat_data
+
+# %%
+modern_horizons = pd.read_csv(
+    project_root
+    / "data/processed/modern_survival_growth_audited_long.csv"
+)
+
+modern_demography = load_eurostat_data(
+    project_root
+    / "data/raw/bd_size_total_Business_demography_by_size_class.tsv.gz"
+)
+
+modern_high_growth = load_eurostat_data(
+    project_root
+    / "data/raw/bd_hg_High_growth_enterprises_and_related_employment.tsv.gz"
+)
+# %%
+main_countries = [
+    "AT", "BE", "BG", "CZ", "DE", "EE", "ES", "FI", "FR", "HU",
+    "IT", "LV", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK",
+]
+
+main_nace = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "L", "M", "N"]
+
+demography_mask = (
+    modern_demography["geo"].isin(main_countries)
+    & modern_demography["nace_r2"].isin(main_nace)
+    & modern_demography["year"].between(2021, 2024)
+    & (modern_demography["age"] == "TOTAL")
+    & (modern_demography["sizeclas"] == "TOTAL")
+    & modern_demography["indic_sbs"].isin(
+        ["ENT_BRTHR_PC", "ENT_DTHR_PC"]
+    )
+)
+
+modern_demography_core = modern_demography.loc[
+    demography_mask
+].copy()
+
+modern_demography_core["component"] = (
+    modern_demography_core["indic_sbs"].map({
+        "ENT_BRTHR_PC": "birth_rate",
+        "ENT_DTHR_PC": "death_rate",
+    })
+)
+
+# %%
+high_growth_mask = (
+    modern_high_growth["geo"].isin(main_countries)
+    & modern_high_growth["nace_r2"].isin(main_nace)
+    & modern_high_growth["year"].between(2021, 2024)
+    & (modern_high_growth["indic_sbs"] == "ENT_HGRWR_PC")
+)
+
+modern_high_growth_core = modern_high_growth.loc[
+    high_growth_mask
+].copy()
+
+modern_high_growth_core["component"] = "high_growth_share"
+# %%
+common_columns = ["geo", "nace_r2", "year", "component", "value"]
+
+modern_common_long = pd.concat(
+    [
+        modern_demography_core[common_columns],
+        modern_high_growth_core[common_columns],
+    ],
+    ignore_index=True,
+)
+
+modern_common_wide = modern_common_long.pivot(
+    index=["geo", "nace_r2", "year"],
+    columns="component",
+    values="value",
+).reset_index()
+
+modern_common_wide.columns.name = None
+# %%
+modern_survival_long = modern_horizons.loc[
+    modern_horizons["component"] == "survival_rate"
+].copy()
+
+modern_survival_wide = modern_survival_long.pivot(
+    index=["geo", "nace_r2", "year"],
+    columns="horizon",
+    values="value_analytical",
+).reset_index()
+
+modern_survival_wide = modern_survival_wide.rename(
+    columns={
+        1: "survival_1y",
+        2: "survival_2y",
+        3: "survival_3y",
+    }
+)
+modern_survival_wide.columns.name = None
+# %%
+modern_snapshot = modern_common_wide.merge(
+    modern_survival_wide,
+    on=["geo", "nace_r2", "year"],
+    how="outer",
+    validate="one_to_one",
+    indicator=True,
+)
+
+# %%
+modern_snapshot = modern_snapshot.drop(columns="_merge")
+
+common_components = [
+    "birth_rate",
+    "death_rate",
+    "high_growth_share",
+]
+
+for horizon in [1, 2, 3]:
+    required_components = common_components + [f"survival_{horizon}y"]
+
+    modern_snapshot[f"complete_s{horizon}"] = (
+        modern_snapshot[required_components].notna().all(axis=1)
+    )
+
+modern_complete_coverage = (
+    modern_snapshot.groupby("year")[
+        ["complete_s1", "complete_s2", "complete_s3"]
+    ].sum()
+)
+# %%
+modern_2024_common = modern_snapshot.loc[
+    (modern_snapshot["year"] == 2024)
+    & modern_snapshot[
+        ["complete_s1", "complete_s2", "complete_s3"]
+    ].all(axis=1)
+].copy()
+# %%
+modern_components = [
+    "birth_rate",
+    "death_rate",
+    "high_growth_share",
+    "survival_1y",
+    "survival_2y",
+    "survival_3y",
+]
+
+modern_means = modern_2024_common[modern_components].mean()
+modern_stds = modern_2024_common[modern_components].std(ddof=0)
+# %%
+modern_z_scores = (
+    modern_2024_common[modern_components] - modern_means
+) / modern_stds
+
+modern_z_scores["death_rate"] *= -1
+
+for horizon in [1, 2, 3]:
+    selected_components = common_components + [f"survival_{horizon}y"]
+
+    modern_2024_common[f"bdi_s{horizon}"] = (
+        modern_z_scores[selected_components].mean(
+            axis=1,
+            skipna=False,
+        )
+    )
+# %%
+modern_bdi_columns = ["bdi_s1", "bdi_s2", "bdi_s3"]
+
+modern_horizon_spearman = (
+    modern_2024_common[modern_bdi_columns].corr(method="spearman")
+)
+# %%
+print(modern_horizon_spearman)
+# %%
+for horizon in [1, 2, 3]:
+    modern_2024_common[f"rank_s{horizon}"] = (
+        modern_2024_common[f"bdi_s{horizon}"]
+        .rank(ascending=False, method="average")
+    )
+
+for horizon in [1, 2]:
+    modern_2024_common[f"rank_shift_s{horizon}_vs_s3"] = (
+        modern_2024_common[f"rank_s{horizon}"]
+        - modern_2024_common["rank_s3"]
+    ).abs()
+
+modern_rank_shift_summary = modern_2024_common[
+    ["rank_shift_s1_vs_s3", "rank_shift_s2_vs_s3"]
+].describe(percentiles=[0.5, 0.9, 0.95])
+# %%
+diagnostics_dir = project_root / "outputs/diagnostics"
+diagnostics_dir.mkdir(parents=True, exist_ok=True)
+
+modern_2024_common.to_csv(
+    diagnostics_dir / "modern_bdi_2024_horizon_comparison.csv",
+    index=False,
+)
+
+modern_horizon_spearman.to_csv(
+    diagnostics_dir / "modern_bdi_2024_horizon_spearman.csv",
+    index=True,
+)
+
+modern_rank_shift_summary.to_csv(
+    diagnostics_dir / "modern_bdi_2024_rank_shift_summary.csv",
+    index=True,
+)
+
+modern_normalization_parameters = pd.DataFrame({
+    "mean": modern_means,
+    "std": modern_stds,
+    "direction": [
+        -1 if component == "death_rate" else 1
+        for component in modern_components
+    ],
+    "reference_n": len(modern_2024_common),
+})
+modern_normalization_parameters.index.name = "component"
+
+modern_normalization_parameters.to_csv(
+    diagnostics_dir / "modern_bdi_2024_normalization_parameters.csv",
+    index=True,
+)
+# %%
+modern_country_summary = (
+    modern_2024_common.groupby("geo")
+    .agg(
+        n_industries=("nace_r2", "nunique"),
+        birth_rate=("birth_rate", "mean"),
+        death_rate=("death_rate", "mean"),
+        high_growth_share=("high_growth_share", "mean"),
+        survival_1y=("survival_1y", "mean"),
+        survival_2y=("survival_2y", "mean"),
+        survival_3y=("survival_3y", "mean"),
+        bdi_s1=("bdi_s1", "mean"),
+        bdi_s2=("bdi_s2", "mean"),
+        bdi_s3=("bdi_s3", "mean"),
+    )
+    .sort_values("bdi_s3", ascending=False)
+)
+
+descriptive_dir = project_root / "outputs/descriptive"
+descriptive_dir.mkdir(parents=True, exist_ok=True)
+
+modern_country_summary.to_csv(
+    descriptive_dir / "modern_bdi_2024_country_summary.csv",
+    index=True,
+)
+# %%
+excluded_2024 = modern_snapshot.loc[
+    (modern_snapshot["year"] == 2024)
+    & ~modern_snapshot[
+        ["complete_s1", "complete_s2", "complete_s3"]
+    ].all(axis=1),
+    [
+        "geo",
+        "nace_r2",
+        "birth_rate",
+        "death_rate",
+        "high_growth_share",
+        "survival_1y",
+        "survival_2y",
+        "survival_3y",
+    ],
+].copy()
+
+print(excluded_2024.to_string(index=False))
+
+excluded_2024.to_csv(
+    diagnostics_dir / "modern_bdi_2024_excluded_observations.csv",
+    index=False,
+)
+# %%
+coverage_dir = project_root / "outputs/coverage"
+coverage_dir.mkdir(parents=True, exist_ok=True)
+
+modern_complete_coverage.to_csv(
+    coverage_dir / "modern_bdi_complete_coverage.csv",
+    index=True,
+)
+# %%
