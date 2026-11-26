@@ -285,3 +285,108 @@ modern_complete_coverage.to_csv(
     index=True,
 )
 # %%
+modern_dynamics = modern_snapshot.copy()
+
+modern_dynamics_z_scores = (
+    modern_dynamics[modern_components] - modern_means
+) / modern_stds
+
+modern_dynamics_z_scores["death_rate"] *= -1
+
+available_years = {
+    1: [2022, 2023, 2024],
+    2: [2023, 2024],
+    3: [2024],
+}
+
+for horizon, years in available_years.items():
+    selected_components = common_components + [
+        f"survival_{horizon}y"
+    ]
+
+    modern_dynamics[f"bdi_s{horizon}"] = (
+        modern_dynamics_z_scores[selected_components]
+        .mean(axis=1, skipna=False)
+        .where(modern_dynamics["year"].isin(years))
+    )
+# %%
+balanced_keys_by_horizon = {}
+
+for horizon, years in available_years.items():
+    index_column = f"bdi_s{horizon}"
+
+    available_counts = (
+        modern_dynamics.loc[
+            modern_dynamics["year"].isin(years)
+        ]
+        .groupby(["geo", "nace_r2"])[index_column]
+        .count()
+    )
+
+    balanced_keys = available_counts.loc[
+        available_counts == len(years)
+    ].index
+
+    balanced_keys_by_horizon[horizon] = balanced_keys
+
+    print(
+        f"S{horizon}: {len(balanced_keys)} pairs, "
+        f"years {years}"
+    )
+# %%
+modern_balanced_parts = []
+
+pair_keys = pd.MultiIndex.from_frame(
+    modern_dynamics[["geo", "nace_r2"]]
+)
+
+for horizon, years in available_years.items():
+    balanced_mask = (
+        pair_keys.isin(balanced_keys_by_horizon[horizon])
+        & modern_dynamics["year"].isin(years)
+    )
+
+    selected = modern_dynamics.loc[
+        balanced_mask,
+        ["geo", "nace_r2", "year", f"bdi_s{horizon}"],
+    ].copy()
+
+    selected = selected.rename(
+        columns={f"bdi_s{horizon}": "bdi"}
+    )
+    selected["survival_horizon"] = horizon
+
+    modern_balanced_parts.append(selected)
+
+modern_dynamics_balanced = pd.concat(
+    modern_balanced_parts,
+    ignore_index=True,
+)
+
+modern_dynamics_summary = (
+    modern_dynamics_balanced
+    .groupby(["survival_horizon", "year"])
+    .agg(
+        n_observations=("bdi", "count"),
+        mean_bdi=("bdi", "mean"),
+        median_bdi=("bdi", "median"),
+        std_bdi=("bdi", "std"),
+    )
+    .reset_index()
+)
+# %%
+modern_dynamics.to_csv(
+    diagnostics_dir / "modern_bdi_dynamics_available.csv",
+    index=False,
+)
+
+modern_dynamics_balanced.to_csv(
+    diagnostics_dir / "modern_bdi_dynamics_balanced.csv",
+    index=False,
+)
+
+modern_dynamics_summary.to_csv(
+    descriptive_dir / "modern_bdi_dynamics_summary.csv",
+    index=False,
+)
+# %%

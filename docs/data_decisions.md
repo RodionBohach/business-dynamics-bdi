@@ -432,3 +432,21 @@ Country summaries are unweighted averages across available industries.
 Norway covers 11 industries and Hungary 10; all other countries
 cover 12. These summaries are not official national aggregate rates.
 
+## Modern BDI dynamics with a fixed 2024 reference
+
+Modern BDI versions use the fixed normalization parameters estimated
+on the common 2024 sample of 237 country–industry observations.
+
+S1 is calculated for 2022–2024, S2 for 2023–2024, and S3 for 2024.
+Earlier years with limited survival coverage are not used.
+
+Temporal summaries use a constant set of country–industry pairs
+within each version: 238 pairs for S1 and 237 for S2.
+S3 is a single-year snapshot with 237 pairs.
+
+Samples may differ between versions. Direct comparisons of all three
+versions in 2024 therefore use the separately prepared common sample.
+
+The fixed reference prevents annual recentering. It does not establish
+methodological comparability across years or with the historical BDI.
+Observed changes are descriptive and are not interpreted as causal effects.
