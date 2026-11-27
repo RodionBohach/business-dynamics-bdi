@@ -1,0 +1,4 @@
+component,lower,upper,total_changed_values,pct_of_observations
+birth_rate,20,20,40,2.0865936358894106
+survival_3y,20,20,40,2.0865936358894106
+high_growth_share,20,20,40,2.0865936358894106

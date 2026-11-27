@@ -1,0 +1,4 @@
+comparison,mean_shift,median_shift,p90_shift,p95_shift,max_shift
+winsor_005_vs_raw,10.528951486697965,7.0,22.0,28.0,364.0
+winsor_01_vs_raw,14.065727699530516,9.0,27.0,35.0,444.0
+winsor_005_vs_winsor_01,4.640584246218049,2.0,7.0,10.0,222.0

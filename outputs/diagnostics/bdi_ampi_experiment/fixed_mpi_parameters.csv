@@ -1,0 +1,4 @@
+component,reference_mean,reference_std_ddof0,normalized_reference,normalized_std_multiplier,reference_n,reference_start_year,reference_end_year
+birth_rate,9.456710114702815,4.564337580630979,100,10,1918,2013,2020
+survival_3y,61.37385818561001,11.531579876002006,100,10,1918,2013,2020
+high_growth_share,10.424645464025026,4.766890955224026,100,10,1918,2013,2020

@@ -1,0 +1,4 @@
+component,reference_mean,fixed_range,scale_multiplier,reference_score,reference_n,reference_start_year,reference_end_year
+birth_rate,9.456710114702815,69.37,60,100,1918,2013,2020
+survival_3y,61.37385818561001,97.78,60,100,1918,2013,2020
+high_growth_share,10.424645464025026,100.0,60,100,1918,2013,2020

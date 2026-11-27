@@ -1,0 +1,4 @@
+component,lower_bound,upper_bound,range,direction,reference_n,reference_start_year,reference_end_year
+birth_rate,0.0,69.37,69.37,1,1918,2013,2020
+survival_3y,2.22,100.0,97.78,1,1918,2013,2020
+high_growth_share,0.0,100.0,100.0,1,1918,2013,2020

@@ -1,0 +1,4 @@
+component,lower_quantile,upper_quantile,lower_threshold,upper_threshold,reference_n
+birth_rate,0.01,0.99,1.8732,24.455199999999998,1917
+survival_3y,0.01,0.99,31.608,91.40079999999999,1917
+high_growth_share,0.01,0.99,1.2712,20.402399999999993,1917

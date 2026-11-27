@@ -1,0 +1,28 @@
+                            OLS Regression Results
+==============================================================================
+Dep. Variable:                bdi_mpi   R-squared:                       0.098
+Model:                            OLS   Adj. R-squared:                  0.097
+Method:                 Least Squares   F-statistic:                     17.47
+Date:                Thu, 26 Nov 2026   Prob (F-statistic):           1.36e-12
+Time:                        23:42:51   Log-Likelihood:                -5858.7
+No. Observations:                1917   AIC:                         1.173e+04
+Df Residuals:                    1912   BIC:                         1.176e+04
+Df Model:                           4
+Covariance Type:              cluster
+===========================================================================================
+                              coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------------
+const                      91.3167      4.535     20.135      0.000      82.428     100.206
+investment_intensity        0.0007      0.015      0.050      0.960      -0.028       0.030
+labour_share                0.0571      0.020      2.800      0.005       0.017       0.097
+log_labour_productivity     0.4401      0.357      1.234      0.217      -0.259       1.139
+employment_growth           0.3442      0.047      7.315      0.000       0.252       0.436
+==============================================================================
+Omnibus:                       17.361   Durbin-Watson:                   0.612
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               26.798
+Skew:                          -0.004   Prob(JB):                     1.52e-06
+Kurtosis:                       3.579   Cond. No.                         988.
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (CRV1)

@@ -1,0 +1,642 @@
+# Data decisions
+Planned coverage: 2013–2024. The currently implemented and validated panel covers the historical period 2013–2020. Modern data for 2021–2024 will be harmonized and assessed for comparability before inclusion.
+## 1. Reproducible data preparation
+
+Raw Eurostat files are preserved without manual modifications.
+A shared Python loader reads all eight TSV.gz exports and converts
+them into long format.
+
+Dimension names are extracted from source headers because datasets
+have different structures. Numeric values and flags are stored
+separately, while the original cell is retained in `value_raw`.
+
+Unexpected numeric tokens raise an error rather than silently
+becoming missing values.
+
+**Ete:** `431 b` becomes numeric value `431` and
+flag `b`; `: p` becomes a missing numeric value while preserving
+flag `p`. Missing observations can also carry source information.
+
+## 2. Historical analytical sample
+
+The main sample is:
+
+- 20 countries;
+- 12 NACE sections;
+- 2013–2020.
+
+The unit of analysis is country × NACE × year.
+
+The resulting grid contains 1,920 observations and 7,680
+component-level records. Before quarantine, all four components
+are available and no duplicate analytical keys are present.
+
+The period follows the prior coverage audit: high-growth data
+were unavailable for the candidate sample in 2010–2011.
+The earlier-period audit still needs to be reproduced in this pipeline.
+
+**Ptd:** a year column in a source file does not imply
+that the indicator has usable values for that year.
+
+## 3. Component mapping
+
+| Eurostat code | Component |
+|---|---|
+| V97020 | birth_rate |
+| V97030 | death_rate |
+| V97043 | survival_3y |
+| V97460 | high_growth_share |
+
+Rates are preserved in their original form during data preparation.
+The negative direction of death rate will be applied during
+BDI construction.
+
+**Ptd:** source-data preparation and index construction
+are separate stages, making transformations easier to audit.
+
+## 4. Survival quarantine
+
+Two observations are quarantined:
+
+| geo | NACE | year | Original value |
+|---|---|---:|---:|
+| RO | J | 2013 | 132.56 |
+| RO | N | 2013 | 105.36 |
+
+The prior review identified concerns about coverage changes and
+cohort comparability. The rule applies specifically to these
+observations; it is not an automatic exclusion of all rates above 100.
+
+Original values and flags are retained. Only the analytical survival
+values are set to missing, and the affected records are marked
+with `quarantined=True`.
+
+**Ptd:** a value can be arithmetically consistent with
+source counts but unsuitable for comparison across cohorts.
+
+Supporting metadata references will be added.
+
+## 5. Validation and outputs
+
+The exported historical Y-panel contains:
+
+- 1,920 rows with unique country × NACE × year keys;
+- two missing values, both in survival_3y;
+- 1,918 complete observations.
+
+All rows are retained; quarantine does not delete observations.
+
+Checks before export cover panel size, duplicate keys, and missing
+values. The exported CSV was read back to verify its structure.
+
+Outputs:
+
+- `data/processed/Y_main_long.csv`: source values, flags, and quarantine;
+- `data/final/Y_panel.csv`: analytical panel.
+
+- built a reusable parser for eight differently
+structured Eurostat exports and an auditable panel pipeline that
+preserves source information and checks expected results.
+
+## Modern Y coverage audit
+
+For the same 20 countries and 12 NACE sections, official rates
+provide complete four-component observations for:
+
+- 2021: 12/240 (5%);
+- 2022: 12/240 (5%);
+- 2023: 12/240 (5%);
+- 2024: 238/240 (99.17%).
+
+The main limitation is missing official Y3 survival rates
+in 2021–2023. Missing values are preserved without imputation.
+
+The main analytical sample remains 2013–2020.
+Year 2024 is a candidate for a separate modern snapshot,
+subject to methodological comparability checks.
+
+Coverage results are exported to `outputs/coverage/`.
+
+## Historical–modern comparability
+
+Eurostat indicates that data from 2021 are comparable with earlier
+years unless a break in series is reported. The EBS transition
+alone does not establish a break for every country.
+
+France explicitly reports that data from 2021 are generally not
+comparable with previous years. Sweden changed its statistical
+unit in 2022, while preserving legal units for selected survival
+cohorts.
+
+Therefore, historical and modern data are not automatically
+treated as one continuous panel. The main sample remains
+2013–2020; 2024 remains a candidate for a separate snapshot.
+
+Germany also reports a statistical-unit change in 2018 and a
+register-threshold change in 2019. These limitations within the
+historical sample will be considered in robustness analysis.
+
+The precise cause of missing official Y3 rates in 2021–2023
+has not been independently established.
+
+Sources:
+- [Eurostat general metadata](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_sims.htm)
+- [France](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_fr.htm)
+- [Sweden](https://ec.europa.eu/eurostat/cache/metadata/en/bd_simsbd21_se.htm)
+- [Germany](https://ec.europa.eu/eurostat/cache/metadata/EN/bd_simsbd21_de.htm)
+
+## Economic X-panel
+
+The main X-panel covers the same 20 countries and 12 NACE
+sections over 2013–2020: 1,920 unique observations.
+
+Source data for 2012 are retained to calculate employment growth
+for 2013. All seven source variables have complete numeric coverage
+in the selected 2012–2020 sample.
+
+Monetary variables use current prices in million EUR (`CP_MEUR`);
+employment and employees use thousand persons (`THS_PER`).
+
+Derived variables:
+
+| Variable | Formula | Unit |
+|---|---|---|
+| investment_intensity | GFCF / GVA × 100 | % |
+| labour_share | Compensation / GVA × 100 | %, unadjusted for self-employed labour |
+| average_compensation | Compensation / Employees × 1,000 | EUR per employee |
+| value_added_ratio | GVA / Output × 100 | % |
+| gfcf_per_employed | GFCF / Employment × 1,000 | EUR per employed person |
+| labour_productivity | GVA / Employment × 1,000 | Nominal EUR per employed person |
+| employment_growth | (Employment / previous-year Employment − 1) × 100 | % |
+| net_operating_surplus_mixed_income_margin | B2A3N / Output × 100 | % |
+
+Employment lags are calculated within country × NACE groups
+after sorting by year. The selected source panel has consecutive
+years, so the previous row corresponds to the previous year.
+
+Three negative GFCF observations were confirmed in the raw data:
+BG/J/2015, BG/E/2016, and LV/D/2017. They are retained and marked
+with `negative_gfcf`. Their specific causes have not been established.
+
+GFCF records acquisitions less disposals of fixed assets, so a
+negative value is not automatically a data error.
+Source: [ESA 2010, §3.124–3.125](https://eur-lex.europa.eu/eli/reg/2013/549/2024-09-01/eng).
+
+The final X-panel has no missing values or duplicate keys.
+All eight derived variables remain candidates; model selection
+and diagnostics have not yet been completed.
+
+## X–Y merge
+
+X and Y were merged on `geo`, `nace_r2`, and `year` using
+an outer join with one-to-one validation.
+
+All 1,920 keys matched in both panels; no unmatched records
+were found. No observations were dropped.
+
+The exported analytical panel contains 1,920 rows and 24 columns.
+Its only missing values are the two quarantined survival rates.
+
+## Baseline BDI construction
+
+Four components receive equal weights of 0.25.
+Birth, survival, and high-growth have positive directions;
+death has a negative direction.
+
+Two normalization variants are calculated: z-score and min-max.
+Parameters are estimated across the pooled historical reference
+sample of 1,918 complete observations from 2013–2020.
+Z-score uses population standard deviation (`ddof=0`).
+
+Death is reversed by multiplying its z-score by -1 and using
+1 minus its min-max score.
+
+Aggregation requires all four components (`skipna=False`).
+All 1,920 rows are retained; the two quarantined survival
+observations have missing BDI values.
+
+Pooled Spearman correlation between the two BDI variants is
+approximately 0.948. This is an initial ranking comparison,
+not a complete robustness assessment.
+
+Normalization parameters are exported for reproducibility.
+These pooled parameters are intended for historical analysis;
+predictive validation would require training-only estimation.
+
+### Sensitivity of the z-score BDI to selected extreme observations
+
+NO/D/2020, PT/D/2016, and RO/M/2013 were excluded from the reference sample used to estimate normalization parameters. Across the remaining 1,915 complete observations, the Spearman correlation between the baseline and sensitivity indices was 0.999299. The median absolute rank shift was 11 positions, the 95th percentile was 44, and the maximum was 89.
+
+The baseline index remains unchanged. This check assesses sensitivity to the selected observations; it does not establish that their source values are erroneous.
+
+### Sensitivity of the min–max BDI
+
+Using the same reference-sample exclusions, the Spearman correlation between the baseline and sensitivity min–max indices was 0.916144 across 1,915 complete observations. The median absolute rank shift was 132 positions, the 95th percentile was 474.9, and the maximum was 873.
+
+Compared with the z-score results, min–max rankings were more sensitive to the selected extreme observations. This supports retaining z-score normalization for the main BDI and using min–max as an alternative specification.
+
+### Initial descriptive analysis
+
+Descriptive summaries and figures were produced for the main sample, covering 1,918 complete BDI observations in 2013–2020.
+
+Mean BDI increased between 2013 and 2018, then declined in 2019–2020. The Netherlands had the highest country mean, while NACE section J had the highest sector mean. These are equally weighted summaries across the selected country–industry–year observations.
+
+The pooled Spearman correlation between birth and death rates was 0.632, while the correlation between death and three-year survival rates was −0.585. These associations do not establish causality.
+
+### Preparation of the baseline model sample
+
+The baseline specification uses investment intensity, labour share, log labour productivity, and employment growth to examine associations with the z-score BDI.
+
+Labour productivity is measured as nominal gross value added per employed person in current EUR. Its natural logarithm is used to reduce right skewness; this does not adjust for inflation or cross-country price differences.
+
+The complete-case sample contains 1,918 observations for 2013–2020. Country, NACE section, and year identifiers are retained. No additional observations were excluded.
+
+VIF values for the four predictors range from 1.009 to 1.967, indicating no substantial multicollinearity in the pooled predictor matrix. This check does not assess collinearity after introducing fixed effects.
+
+The specification is preliminary and intended to assess associations, not causal effects.
+
+### Initial pooled OLS model
+
+A pooled OLS model was estimated on 1,918 complete observations, with z-score BDI as the dependent variable. Predictors were investment intensity, labour share, log labour productivity, and employment growth.
+
+Standard errors were clustered by country × NACE section (240 clusters), allowing for heteroskedasticity and within-cluster error dependence.
+
+R-squared was 0.165. Labour share, log labour productivity, and employment growth had positive coefficients with p-values below 0.05. Investment intensity had a positive coefficient, but its clustered p-value was 0.090.
+
+This model provides a preliminary association benchmark. It does not include fixed effects and does not identify causal relationships. Clustering by country × NACE does not account for dependence across different clusters.
+
+### Two-way fixed-effects model
+
+The model includes country × NACE fixed effects and year fixed effects, with standard errors clustered by country × NACE (240 clusters). It uses the same 1,918 observations as pooled OLS.
+
+Estimated coefficients were:
+- Investment intensity: 0.00257 (p = 0.039).
+- Labour share: −0.01256 (p < 0.001).
+- Log labour productivity: −0.30664 (p = 0.045).
+- Employment growth: 0.00783 (p < 0.001).
+
+Labour share and log labour productivity changed sign relative to pooled OLS. The fixed-effects estimates describe within-pair associations after controlling for common year effects; they do not establish causality.
+
+Within-transformed predictor VIFs ranged from 1.032 to 1.615, providing no indication of substantial multicollinearity among the four predictors.
+
+The reported R-squared of 0.674 includes the fixed effects. The omnibus robust F-test was not interpreted because its constraint covariance matrix was rank deficient. Country × NACE clustering does not allow for error dependence across different pairs.
+
+### Fixed-effects diagnostics and sensitivity analysis
+
+Residual-versus-fitted plots and observation-level residuals, leverage, and Cook’s distances were examined. Cook’s distance is a conventional OLS diagnostic for the full dummy-variable model, not a cluster-adjusted influence measure or an automatic exclusion rule.
+
+The fixed-effects model was re-estimated after excluding PT/D/2016, NO/D/2020, and RO/M/2013. The sensitivity sample contained 1,915 observations and retained all 240 country × NACE pairs. BDI values and normalization parameters were unchanged.
+
+All four predictor coefficients retained their signs and remained close to the baseline estimates. Investment intensity remained borderline at the 5% level (p = 0.0477). This supports coefficient stability under this specific exclusion scenario; it does not establish robustness to other specifications or clustering choices.
+
+### Sensitivity to the clustering level
+
+The same fixed-effects specification was estimated with standard errors clustered by country × NACE (240 clusters) and by country (20 clusters). Both estimates used t-based inference.
+
+Coefficients were unchanged, but country-clustered standard errors were larger. Country-clustered p-values were 0.0695 for investment intensity, 0.0613 for labour share, 0.2409 for log labour productivity, and 0.0497 for employment growth.
+
+Statistical significance is therefore sensitive to the clustering level. Country clustering allows error dependence across industries within a country, but inference with only 20 clusters remains approximate. These results warrant cautious interpretation rather than firm claims based on a 5% threshold.
+
+### Sensitivity to BDI normalization in the fixed-effects model
+
+The fixed-effects specification was re-estimated using min–max BDI on the same 1,918 observations, with the same four predictors, country × NACE and year fixed effects, and country-clustered standard errors with t-based inference.
+
+All four coefficient signs matched the z-score specification. However, all 95% confidence intervals included zero. The results support sign consistency across these two normalizations, but not robust statistical significance. Coefficient magnitudes are not directly comparable because the dependent variables have different scales.
+
+### Presentation of fixed-effects results
+
+Z-score and min–max coefficient estimates were combined in a comparison table. Their raw magnitudes are not directly comparable because the dependent variables have different scales.
+
+For the z-score model, coefficients and country-clustered 95% confidence intervals were multiplied by each predictor’s standard deviation after removing country × NACE and year effects. The resulting figure reports associations per one within-standard-deviation increase in each predictor, in BDI units. This rescaling does not change the fitted model or statistical significance.
+
+## Reproducing the analysis
+
+Run the following commands from the repository root with the project virtual environment activated.
+
+### Build the analytical data and BDI
+
+python src/data/build_y_panel.py
+python src/data/build_x_panel.py
+python src/data/merge_panels.py
+python src/index/build_bdi.py
+
+### Run data audits and descriptive analysis
+
+python notebooks/check_eurostat_loader.py
+python notebooks/audit_modern_y.py
+python notebooks/diagnose_bdi.py
+python notebooks/describe_bdi.py
+
+### Prepare and estimate models
+
+python notebooks/prepare_models.py
+python src/model/fit_baseline.py
+python src/model/fit_fixed_effects.py
+python notebooks/compare_models.py
+
+Plot windows may need to be closed for scripts to continue.
+
+The fixed-effects summary may emit a warning about a rank-deficient covariance matrix of constraints. The omnibus robust F-test is not interpreted; individual coefficient estimates and uncertainty are reported separately.
+
+Raw Eurostat files must be present in data/raw. They are not included in the repository.
+
+
+### Audit of survival horizons and survivor employment growth
+
+Additional Eurostat extracts downloaded on 24 November 2026 contain survival rates and survivor employment growth for one-, two-, and three-year horizons.
+
+Within the selected 20 countries and 12 NACE sections, historical survival rates had complete numeric coverage for 2009–2020. However, 92 values were outside 0–100%. Four occurred in 2013–2020: two Romanian Y3 observations in 2013 and two Hungarian Y1 observations in 2020.
+
+Two modern survival rates exceeded 100%, both for Norway, section D: Y2 in 2023 and Y3 in 2024. Original values and flags were preserved; only `value_analytical` was set to missing for out-of-range survival rates.
+
+After this check, modern survival coverage was:
+
+| Year | Y1 | Y2 | Y3 |
+|---|---:|---:|---:|
+| 2021 | 12 | 12 | 12 |
+| 2022 | 238 | 12 | 12 |
+| 2023 | 240 | 237 | 12 |
+| 2024 | 240 | 240 | 237 |
+
+The expected count is 240 for each horizon and year. In-range values carrying break flags remain available and require separate comparability assessment.
+
+Survivor employment growth measures cumulative employment change among surviving enterprises relative to employment in those same enterprises at birth. No values at or below −100% were found. Large positive values were retained for further examination.
+
+This audit does not establish historical–modern comparability or approve a revised BDI specification. The original BDI remains unchanged.
+
+### Sensitivity to excluding the death-rate component
+
+The original four-component BDI was compared with an alternative excluding death rate. The comparison retained the same 1,918 observations and the original z-score parameters for the remaining components. Their weights changed from 0.25 to 1/3.
+
+The Spearman rank correlation was 0.8302. The median absolute rank shift was 162.5 positions, the 95th percentile was 651, and the maximum was 1,876.
+
+All eight PT/N observations appeared among the ten largest rank shifts. Their profiles combined high birth and death rates, low three-year survival, and relatively high high-growth shares. Excluding death rate substantially improved their ranks.
+
+The original specification is retained provisionally because low enterprise mortality is an explicit part of its intended interpretation, alongside enterprise creation, cohort survival, and growth. The comparison demonstrates the consequences of that choice; it does not establish that either specification is objectively superior.
+
+Death rate and churn are also reported separately. Churn is calculated as birth rate plus death rate and describes turnover rather than necessarily beneficial economic renewal. No component is removed selectively for individual countries or years.
+
+### Comparison of survival horizons
+
+Three four-component BDI variants were compared, replacing only the survival horizon with one-, two-, or three-year survival. Birth rate, reversed death rate, and the original high-growth share were unchanged.
+
+The comparison used 1,916 observations with valid values for all required components. Z-score parameters were estimated on this common sample, with separate parameters for each survival horizon. The original BDI was not overwritten. The new and original Y3 extracts matched in both values and missingness.
+
+Spearman correlations between BDI variants ranged from 0.9023 to 0.9376. Correlations between survival rates alone ranged from 0.6920 to 0.8128. Shared BDI components therefore reduced the apparent differences between survival horizons.
+
+Relative to the Y3 variant, median absolute rank shifts were 109.5 positions for Y1 and 67 for Y2. The choice of survival horizon affects rankings and cannot be justified by high index correlations alone.
+
+A separate cohort analysis aligned Y1, Y2, and Y3 for birth cohorts 2012–2017, producing 1,440 complete trajectories. One trajectory, AT/E/2012, increased from 78.77% at Y1 to 82.19% at Y2. Source values were confirmed and carried no flags; the cause was not established. The trajectory was retained and marked rather than corrected.
+
+These checks do not select an optimal horizon. Each variant describes a different survival horizon, while the high-growth component retains its three-year definition.
+
+### Comparison of growth components
+
+High-growth share was compared with cumulative employment growth among surviving enterprises over one-, two-, and three-year horizons.
+
+Six BDI variants were calculated on the same 1,855 complete observations from 2013–2020. Within each horizon pair, birth rate, reversed death rate, survival rate, and component weights were identical; only the growth component changed. Z-score parameters were estimated on this common sample.
+
+Spearman correlations between paired BDI variants were 0.7922, 0.8081, and 0.7489 for horizons 1–3. Correlations between high-growth share and survivor employment growth alone were substantially lower: 0.1136, 0.1551, and 0.1878.
+
+Median absolute rank shifts were 194, 199, and 218 positions out of 1,855. The two growth measures therefore cannot be treated as interchangeable proxies.
+
+High-growth share measures the prevalence of enterprises meeting a growth threshold. Survivor employment growth measures employment expansion within surviving birth cohorts and excludes employment losses in enterprises that did not survive. Neither comparison establishes which measure is preferable independently of the intended index concept.
+
+The original BDI remains unchanged. Survivor employment growth is retained as an alternative measure for further interpretation, rather than adopted solely to match the survival horizon.
+
+## Separate modern BDI snapshot: 2024
+
+The 2024 snapshot is analysed separately from the historical
+2013–2020 BDI because comparability across the data transition
+has not been established.
+
+Three versions retain birth rate, negatively directed death rate
+and high-growth enterprise share, while using one-, two- or
+three-year survival respectively. The high-growth component retains
+its three-year growth window in all versions.
+
+All versions use the same 237 country–industry observations.
+Normalization parameters are calculated on this common 2024 sample.
+The resulting index values are not directly comparable with the
+historical BDI.
+
+Hungary's sections B and E lack three-year survival values.
+Norway's section D is excluded because its reported three-year
+survival rate of 462.25% was quarantined during the audit.
+
+Spearman correlations between versions range from 0.893 to 0.940.
+Median absolute rank shifts relative to the three-year survival
+version are 14 places for S1 and 9 places for S2.
+
+Country summaries are unweighted averages across available industries.
+Norway covers 11 industries and Hungary 10; all other countries
+cover 12. These summaries are not official national aggregate rates.
+
+## Modern BDI dynamics with a fixed 2024 reference
+
+Modern BDI versions use the fixed normalization parameters estimated
+on the common 2024 sample of 237 country–industry observations.
+
+S1 is calculated for 2022–2024, S2 for 2023–2024, and S3 for 2024.
+Earlier years with limited survival coverage are not used.
+
+Temporal summaries use a constant set of country–industry pairs
+within each version: 238 pairs for S1 and 237 for S2.
+S3 is a single-year snapshot with 237 pairs.
+
+Samples may differ between versions. Direct comparisons of all three
+versions in 2024 therefore use the separately prepared common sample.
+
+The fixed reference prevents annual recentering. It does not establish
+methodological comparability across years or with the historical BDI.
+Observed changes are descriptive and are not interpreted as causal effects.
+
+## Exploratory preference scenarios: manufacturing and ICT, 2024
+
+An illustrative comparison was conducted separately for NACE C and J.
+A user-defined minimum three-year survival rate of 60% was applied.
+This threshold is demonstrative, not an empirically established benchmark.
+
+Among eligible countries, Finland and the Netherlands were the only
+non-dominated options on three-year survival and high-growth share
+in both industries.
+
+Two-criterion scores used the existing fixed 2024 normalization
+parameters and illustrative survival/growth weights of 75/25,
+50/50 and 25/75.
+
+The Netherlands scored higher under 75/25 and 50/50 weights;
+Finland scored higher under 25/75 weights in both industries.
+
+The exercise demonstrates how explicit preferences can resolve
+trade-offs after filtering. It does not establish the necessity
+or validity of the original four-component BDI and does not
+change its specification.
+
+## Three-component MPI: normalization and sensitivity experiment
+
+The proposed index combines enterprise birth rate, three-year
+survival rate and high-growth enterprise share.
+
+Each component is standardized using fixed historical reference
+parameters:
+
+r_j = 100 + 10 * (x_j - mean_j) / std_j
+
+Reference standard deviations use ddof=0. Parameters are fixed
+across years rather than recalculated annually.
+
+The experimental score is:
+
+MPI = M - S² / M
+
+Here M is the arithmetic mean of the three normalized components,
+and S is their population standard deviation within an observation.
+The penalty reflects imbalance between relative component scores,
+not temporal volatility.
+
+With the original reference sample, local monotonicity violations
+were detected for NO/D/2020 and PT/D/2016.
+
+A sensitivity experiment compared:
+A. reference parameters excluding NO/D/2020;
+B. reference parameters excluding NO/D/2020 and PT/D/2016.
+
+Both specifications were evaluated on the same remaining
+1,916 observations. No local monotonicity violations were detected
+at these observations.
+
+The Spearman correlation between the two rankings was 0.999705.
+The median absolute rank shift was 7 places, the 95th percentile
+was 28 places, and the maximum was 64 places.
+
+This indicates limited sensitivity of the remaining rankings to
+the inclusion of PT/D/2016 in the reference parameters. It does not
+establish that PT/D/2016 is erroneous or justify its permanent
+exclusion.
+
+Statistics Norway reports insufficient data and/or breaks affecting
+industry D up to and including 2020. The applicable exclusion scope
+must be documented before the main analytical sample is revised:
+https://www.ssb.no/en/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/foretak
+
+The MPI specification remains experimental. Main index outputs
+and regression models have not yet been replaced.
+
+## Selected BDI specification: three components and an MPI penalty
+
+### Purpose and components
+
+BDI is an author-developed composite measure of the level and
+balance of business formation, survival and high growth.
+
+The selected components are:
+- enterprise birth rate;
+- three-year enterprise survival rate;
+- high-growth enterprise share.
+
+All components have positive polarity and equal formal weights.
+Death rate and churn are retained as contextual indicators,
+rather than components of the selected index.
+
+BDI combines different enterprise populations and time windows.
+It does not describe a single cohort or measure the probability
+of success of an individual business.
+
+### Data quality exclusion
+
+NO/D/2020 is excluded from the selected experimental sample
+because Statistics Norway reports insufficient basic data and/or
+breaks affecting industry D up to and including 2020.
+
+This is a data-quality decision, not a claim that the individual
+published values have been proven erroneous.
+
+The applicability of this warning to other NO/D observations must
+be resolved before the final main analytical sample is established.
+
+Source:
+https://www.ssb.no/en/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/foretak
+
+### Treatment of extreme values
+
+Original values are preserved.
+
+For index calculation, each component is upper-winsorized at its
+99.9th percentile in the historical reference sample.
+Lower-tail values are not increased.
+
+In the current sample of 1,917 observations, the upper thresholds are:
+- birth rate: approximately 30.1374%;
+- three-year survival: approximately 98.9191%;
+- high-growth enterprise share: approximately 24.9865%.
+
+Implementation uses the full-precision saved thresholds.
+
+This rule changes six component values in six observations.
+PT/D/2016 remains in the sample; its original birth rate of 69.37%
+is retained, while its index input is capped at the threshold.
+
+The percentile is an author-selected methodological parameter,
+not an official European target or a universal optimum.
+Published composite-index methodologies provide precedent for
+outlier treatment, but do not prescribe this exact threshold.
+
+### Fixed historical standardization
+
+Means and population standard deviations are calculated after
+winsorization on the historical reference sample and fixed across years.
+
+For each component:
+
+r_j = 100 + 10 * (x_j_analytical - mean_j) / std_j
+
+Standard deviations use ddof=0.
+A score of 100 represents the historical reference mean of that
+component, not an economic target.
+
+### Aggregation
+
+For each country–industry–year observation:
+
+M = mean of the three normalized component scores
+S = population standard deviation across those three scores
+Penalty = S² / M
+BDI = M - Penalty
+
+This is MPI-style aggregation with fixed historical standardization.
+It is not the min–max-normalized AMPI specification tested earlier.
+
+The penalty reflects imbalance between normalized component scores,
+not volatility over time. Compensation is reduced, not eliminated.
+
+### Experimental validation
+
+On the current 1,917 observations:
+- no nonpositive local derivatives were detected after treatment;
+- Spearman correlation with the untreated MPI was 0.999689;
+- median absolute rank shift was 7 places;
+- maximum absolute rank shift was 160 places.
+
+These results support the selected specification on the observed
+sample. They do not establish global monotonicity for all possible
+future profiles.
+
+Winsorization creates saturation above the thresholds:
+further increases in the original component do not increase its
+analytical input.
+
+### Interpretation and implementation status
+
+BDI is reported together with its mean level, penalty and components.
+It does not measure overall economic welfare or policy effectiveness.
+
+With fixed normalization:
+change in BDI = change in mean level - change in penalty.
+
+Historical and modern periods remain separate unless their
+comparability is established.
+
+The selected specification has been tested experimentally.
+Main index files, regression models, horizon comparisons and the
+analytical report still require updating.

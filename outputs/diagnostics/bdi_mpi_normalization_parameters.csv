@@ -1,0 +1,4 @@
+component,upper_quantile,upper_threshold,mean_after_winsorization,std_after_winsorization_ddof0,normalized_reference,normalized_std_multiplier,direction,formal_weight,reference_n,reference_start_year,reference_end_year,winsorized_value_count
+birth_rate,0.999,30.137360000000513,9.437096880542514,4.352803644154264,100.0,10.0,1,0.3333333333333333,1917,2013,2020,2
+survival_3y,0.999,98.91912000000006,61.40358802295253,11.45140078749132,100.0,10.0,1,0.3333333333333333,1917,2013,2020,2
+high_growth_share,0.999,24.98652000000006,10.37686647887324,4.302968612307104,100.0,10.0,1,0.3333333333333333,1917,2013,2020,2

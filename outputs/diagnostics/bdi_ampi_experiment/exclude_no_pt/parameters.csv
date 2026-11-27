@@ -1,0 +1,7 @@
+component,scenario,reference_mean,reference_std,reference_n
+birth_rate,a_without_no,9.461643192488262,4.560413371837726,1917
+survival_3y,a_without_no,61.40471570161711,11.455147687368084,1917
+high_growth_share,a_without_no,10.3779186228482,4.306662996269286,1917
+birth_rate,b_without_no_pt,9.430375782881,4.351329442508616,1916
+survival_3y,b_without_no_pt,61.40753653444676,11.457470987356603,1916
+high_growth_share,b_without_no_pt,10.379671189979126,4.307103244343837,1916

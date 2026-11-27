@@ -1,0 +1,4 @@
+component,original_reference_mean,sensitivity_reference_mean,original_range,sensitivity_range,original_reference_n,sensitivity_reference_n
+birth_rate,9.456710114702815,9.430375782881,69.37,37.81,1918,1916
+survival_3y,61.37385818561001,61.40753653444676,97.78,83.33,1918,1916
+high_growth_share,10.424645464025026,10.379671189979126,100.0,26.06,1918,1916

@@ -1,0 +1,4 @@
+scenario,survival_weight,high_growth_weight,minimum_survival_3y,reference_year,reference_n
+survival_priority,0.75,0.25,60,2024,237
+equal_priority,0.5,0.5,60,2024,237
+growth_priority,0.25,0.75,60,2024,237

@@ -1,0 +1,10 @@
+component,scenario,min_derivative,nonpositive_count
+birth_rate,raw,-0.032764722288485225,1
+survival_3y,raw,0.13370775252862702,0
+high_growth_share,raw,0.1757899160780492,0
+birth_rate,winsor_005,0.08844347172614281,0
+survival_3y,winsor_005,0.14555573080850978,0
+high_growth_share,winsor_005,0.19135318423515116,0
+birth_rate,winsor_01,0.09005707968155452,0
+survival_3y,winsor_01,0.1527021652393361,0
+high_growth_share,winsor_01,0.1897363363622919,0

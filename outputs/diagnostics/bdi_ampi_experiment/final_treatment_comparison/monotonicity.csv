@@ -1,0 +1,13 @@
+component,scenario,min_derivative,nonpositive_count
+birth_rate,raw,-0.032764722288485225,1
+survival_3y,raw,0.13370775252862702,0
+high_growth_share,raw,0.1757899160780492,0
+birth_rate,two_sided_005,0.08844347172614281,0
+survival_3y,two_sided_005,0.14555573080850978,0
+high_growth_share,two_sided_005,0.19135318423515116,0
+birth_rate,two_sided_001,0.09038242814995566,0
+survival_3y,two_sided_001,0.13493732386905086,0
+high_growth_share,two_sided_001,0.1752214943682567,0
+birth_rate,upper_only_999,0.09048633834362184,0
+survival_3y,upper_only_999,0.13506975586727313,0
+high_growth_share,upper_only_999,0.17526232725511115,0

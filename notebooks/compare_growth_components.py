@@ -1,4 +1,8 @@
 # %%
+# Preliminary component-selection experiment.
+# Uses arithmetic composite variants rather than the selected MPI.
+# Its results are not estimates of the final BDI specification.
+
 from pathlib import Path
 
 import pandas as pd

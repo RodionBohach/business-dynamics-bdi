@@ -1,0 +1,5 @@
+specification,outcome,n_observations,n_pairs,n_countries,r_squared_including_fe,adjusted_r_squared
+mpi_country_clustered,bdi_mpi,1917,240,20,0.7292895750308908,0.6886667621603761
+mean_country_clustered,bdi_mpi_mean,1917,240,20,0.7136804466742203,0.6707153276277347
+exclude_pt_d_2016,bdi_mpi,1916,240,20,0.7292020674651967,0.6885417172347457
+exclude_all_no_d,bdi_mpi,1910,239,20,0.7291914996824882,0.6885702246348615

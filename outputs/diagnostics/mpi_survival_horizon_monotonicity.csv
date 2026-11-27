@@ -1,0 +1,10 @@
+horizon,component,min_local_derivative,nonpositive_count
+1,birth_rate,0.12598213364147692,0
+1,survival_1y,0.14778747175753779,0
+1,high_growth_share,0.16988154794010835,0
+2,birth_rate,0.10600403857287866,0
+2,survival_2y,0.13600602050958013,0
+2,high_growth_share,0.16100306889067653,0
+3,birth_rate,0.0905776106367991,0
+3,survival_3y_new,0.13513304945727972,0
+3,high_growth_share,0.17527827442398583,0

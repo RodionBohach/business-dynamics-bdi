@@ -1,0 +1,7 @@
+component,scenario,min_derivative,nonpositive_count
+birth_rate,a_without_no,0.09554711130588822,0
+survival_3y,a_without_no,0.13370775252862702,0
+high_growth_share,a_without_no,0.1757899160780492,0
+birth_rate,b_without_no_pt,0.09046377295376244,0
+survival_3y,b_without_no_pt,0.1322616150084681,0
+high_growth_share,b_without_no_pt,0.17541987522088576,0

@@ -1,0 +1,3 @@
+scenario,reference_n,evaluation_n,mean_penalty,max_penalty,nonmonotonic_rows
+a_without_no,1917,1916,0.6672933219168697,8.693146900394018,0
+b_without_no_pt,1916,1916,0.6874908211827084,9.113903256554298,0
